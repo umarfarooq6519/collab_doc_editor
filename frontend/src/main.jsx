@@ -7,11 +7,18 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import "./index.css";
 import TextEditor from "./TextEditor.jsx";
+import "./index.css";
+
+// TODO:
+// Implement mongoDB atlas
+// Host the project
+// Implement MUI sidebar and responsive
+// Implement auth
+// Implement AI feature
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <StrictMode> 
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to={`/${uuidv4()}`} replace />} />

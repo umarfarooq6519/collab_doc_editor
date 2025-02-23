@@ -1,38 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+  --foreground: #222222;
+  --background: #f3f3f3;
+  --white: #ffffff;
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  font-family: "Inter", serif;
+  font-optical-sizing: auto;
+  font-size: 14px;
 }
 
 body {
-  background-color: #f3f3f3;
+  background-color: var(--background);
+  color: var(--foreground);
   margin: 0;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .container .ql-editor {
   width: 8.5in;
   min-height: 11in;
   padding: 1in;
-  margin: 1rem;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  background-color: white;
+  margin-bottom: 1rem;
+  border-radius: 20px;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  background-color: var(--white);
 }
 
 .container .ql-container.ql-snow {
   border: none;
-  display: flex;
-  justify-content: center;
+}
+
+.ql-editor ::selection {
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 .container .ql-toolbar.ql-snow {
   display: flex;
   justify-content: center;
   position: sticky;
-  top: 0;
+  width: fit-content;
+  top: 15px;
+  margin: 15px;
+  padding-block: 15px;
+  border-radius: 20px;
   z-index: 1;
-  background-color: #f3f3f3;
+  background-color: var(--white);
   border: none;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
 }
 
 @page {
@@ -57,3 +95,10 @@ body {
     display: none;
   }
 }
+
+/* @media (max-width: 600px) {
+  .ql-toolbar {
+    flex-direction: column;
+    align-items: center;
+  }
+} */
