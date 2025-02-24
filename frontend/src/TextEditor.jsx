@@ -17,6 +17,8 @@ function TextEditor() {
   useEffect(() => {
     const serverURL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
     const s = io(serverURL);
+
+    console.log(import.meta.env.VITE_SERVER_URL);
     setSocket(s);
 
     return () => s.disconnect();
