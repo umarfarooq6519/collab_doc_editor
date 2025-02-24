@@ -18,12 +18,23 @@ connectDB(MONGO_URI);
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors({ origin: CLIENT_URL, methods: ["GET", "POST"] }));
+// CORS Middleware Update
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = [CLIENT_URL, "https://colladoc.vercel.app"];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST"]
+}));
 
-// Establish Socket.io connection
+// Establish Socket.io connection with proper CORS
 const io = new Server(server, {
   cors: {
-    origin: CLIENT_URL, // Allow frontend URL
+    origin: ["https://colladoc.vercel.app"],
     methods: ["GET", "POST"],
   },
 });
@@ -49,7 +60,6 @@ io.on("connection", (socket) => {
     });
   });
 });
-
 
 async function findOrCreateDoc(docID) {
   if (!docID) return;
