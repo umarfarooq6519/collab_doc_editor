@@ -15,7 +15,8 @@ function TextEditor() {
 
   // enable socket locally
   useEffect(() => {
-    const s = io("http://localhost:3000");
+    const serverURL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+    const s = io(serverURL);
     setSocket(s);
 
     return () => s.disconnect();
@@ -94,7 +95,11 @@ function TextEditor() {
     setQuill(q);
   }, []);
 
-  return <div className="container" ref={wrapperRef}></div>;
+  return <section><div className="container" ref={wrapperRef}></div>
+    <div className="">
+      
+    </div>
+  </section>;
 }
 
 export default TextEditor;

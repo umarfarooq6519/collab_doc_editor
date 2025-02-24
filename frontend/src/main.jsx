@@ -10,6 +10,9 @@ import {
 import TextEditor from "./TextEditor.jsx";
 import "./index.css";
 
+
+// VITE_SERVER_URL and CLIENT_URL
+
 // TODO:
 // Implement mongoDB atlas
 // Host the project
