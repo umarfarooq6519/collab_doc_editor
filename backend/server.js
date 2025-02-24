@@ -18,16 +18,22 @@ connectDB(MONGO_URI);
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors({ origin: CLIENT_URL, methods: ["GET", "POST"] }));
-
+app.use(
+  cors({
+    origin: [CLIENT_URL, "https://colladoc.vercel.app"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 console.log(CLIENT_URL);
 
 
 // Establish Socket.io connection
 const io = new Server(server, {
   cors: {
-    origin: CLIENT_URL, // Allow frontend URL
+    origin: [CLIENT_URL, "https://colladoc.vercel.app"], // Allow frontend URL
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
