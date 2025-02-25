@@ -15,7 +15,8 @@ function TextEditor() {
 
   // enable socket locally
   useEffect(() => {
-    const serverURL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+    const serverURL =
+      import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
     const s = io(serverURL);
 
     console.log(import.meta.env.VITE_SERVER_URL);
@@ -24,22 +25,23 @@ function TextEditor() {
     return () => s.disconnect();
   }, []);
 
-  // Handle socket and quill related events
+  // Load the doc
   useEffect(() => {
-    if (!socket || !quill) return; // if not yet loaded
+    if (!socket || !quill) return;
 
-    // load doc contents and enable editing
     socket.once("load-document", (doc) => {
       quill.setContents(doc);
       quill.enable();
     });
 
-    // get doc using ID, or create one
     socket.emit("get-document", docID);
+  }, [socket, quill, docID]);
 
-    // fetch updated doc changes from quill
+  // Handle real-time updates
+  useEffect(() => {
+    if (!socket || !quill) return;
+
     const receiveChanges = (delta) => quill.updateContents(delta);
-    // send new doc changes to socket
     const sendChanges = (delta, oldDelta, source) => {
       if (source === "user") socket.emit("send-changes", delta);
     };
@@ -47,20 +49,24 @@ function TextEditor() {
     socket.on("receive-changes", receiveChanges);
     quill.on("text-change", sendChanges);
 
-    // Auto-save document at intervals
+    return () => {
+      socket.off("receive-changes", receiveChanges);
+      quill.off("text-change", sendChanges);
+    };
+  }, [socket, quill]);
+
+  // Auto-save doc at intervals
+  useEffect(() => {
+    if (!socket || !quill) return;
+
     const interval = setInterval(() => {
       socket.emit("save-document", quill.getContents());
     }, SAVE_INTERVAL_MS);
 
-    // clear all events and intervals
-    return () => {
-      socket.off("receive-changes", receiveChanges);
-      quill.off("text-change", sendChanges);
-      clearInterval(interval);
-    };
-  }, [socket, quill, docID]);
+    return () => clearInterval(interval);
+  }, [socket, quill]);
 
-  // callback function for setting quill editor
+  // callback func for setting quill editor
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper == null) return;
 
@@ -97,11 +103,11 @@ function TextEditor() {
     setQuill(q);
   }, []);
 
-  return <section><div className="container" ref={wrapperRef}></div>
-    <div className="">
-      
-    </div>
-  </section>;
+  return (
+    <section>
+      <div className="container" ref={wrapperRef}></div>
+    </section>
+  );
 }
 
 export default TextEditor;
