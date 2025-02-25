@@ -10,7 +10,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:4173";
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
 connectDB(MONGO_URI);
 
@@ -20,7 +20,7 @@ const server = http.createServer(app);
 
 app.use(
   cors({
-    origin: [CLIENT_URL, "https://colladoc.vercel.app"],
+    origin: [CLIENT_URL, "http://localhost:5173/"],
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -31,7 +31,7 @@ console.log(CLIENT_URL);
 // Establish Socket.io connection
 const io = new Server(server, {
   cors: {
-    origin: [CLIENT_URL, "https://colladoc.vercel.app"], // Allow frontend URL
+    origin: [CLIENT_URL, "http://localhost:5173/"], // Allow frontend URL
     methods: ["GET", "POST"],
     credentials: true,
   },

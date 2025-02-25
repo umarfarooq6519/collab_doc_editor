@@ -14,8 +14,8 @@ import "./index.css";
 // VITE_SERVER_URL and CLIENT_URL
 
 // TODO:
-// Implement mongoDB atlas
-// Host the project
+// Implement mongoDB atlas ✅
+// Host the project ✅
 // Implement MUI sidebar and responsive
 // Implement auth
 // Implement AI feature
