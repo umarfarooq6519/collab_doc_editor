@@ -20,7 +20,7 @@ const server = http.createServer(app);
 
 app.use(
   cors({
-    origin: [CLIENT_URL, "http://localhost:5173/"],
+    origin: [CLIENT_URL, "http://localhost:5173"],
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -31,7 +31,7 @@ console.log(CLIENT_URL);
 // Establish Socket.io connection
 const io = new Server(server, {
   cors: {
-    origin: [CLIENT_URL, "http://localhost:5173/"], // Allow frontend URL
+    origin: [CLIENT_URL, "http://localhost:5173"], // Allow frontend URL
     methods: ["GET", "POST"],
     credentials: true,
   },
