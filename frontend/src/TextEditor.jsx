@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Quill from "quill";
 import { io } from "socket.io-client";
-import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
 
 function TextEditor() {
   const { id: docID } = useParams();
@@ -91,7 +91,7 @@ function TextEditor() {
     wrapper.append(editor);
 
     const q = new Quill(editor, {
-      theme: "snow",
+      theme: "bubble",
       modules: {
         toolbar: toolbarOptions,
       },
@@ -105,6 +105,26 @@ function TextEditor() {
 
   return (
     <section>
+      <div className="top-bar">
+        <div className="content">
+          <div className="wrapper menu-wrapper">
+            <img src="/icons/menu.svg" className="icon" alt="" />
+          <h1>CollaDoc. </h1>
+          </div>
+
+          <div className="wrapper">
+            <button className="share-btn">
+              <img className="icon" src="/icons/share.svg" alt="" />
+              <span>Share</span>
+            </button>
+
+            <div className="avatar">
+              <img src="/avatars/avatartion.png" alt="User Avatar" />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="container" ref={wrapperRef}></div>
     </section>
   );
