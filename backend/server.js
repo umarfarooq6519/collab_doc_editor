@@ -4,7 +4,7 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import Document from "./doc.model.js";
-import { connectDB } from "./db.js";
+import { connectDB, fetchDocs } from "./db.js";
 
 dotenv.config();
 
@@ -25,8 +25,8 @@ app.use(
     credentials: true,
   })
 );
-console.log(CLIENT_URL);
 
+console.log("Client:", CLIENT_URL);
 
 // Establish Socket.io connection
 const io = new Server(server, {
@@ -59,6 +59,14 @@ io.on("connection", (socket) => {
   });
 });
 
+app.get("/api/docs", async (req, res) => {
+  try {
+    const docs = await fetchDocs();
+    res.json(docs);
+  } catch (e) {
+    res.status(500).json({ error: "Error fetching documents" });
+  }
+});
 
 async function findOrCreateDoc(docID) {
   if (!docID) return;
