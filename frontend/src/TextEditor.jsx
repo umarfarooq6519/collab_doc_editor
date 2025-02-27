@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Quill from "quill";
 import { io } from "socket.io-client";
 import "quill/dist/quill.bubble.css";
 
 function TextEditor() {
-  const navigate = useNavigate();
-
   const { id: docID } = useParams();
   const [socket, setSocket] = useState();
   const [quill, setQuill] = useState();
@@ -14,6 +12,23 @@ function TextEditor() {
   const [sidebar, setSidebar] = useState(false);
 
   const [docs, setDocs] = useState([]);
+
+  const [copyState, setCopyState] = useState(false);
+
+  const avatars = [
+    "/avatars/avatartion.png",
+    "/avatars/avatartion(1).png",
+    "/avatars/avatartion(2).png",
+    "/avatars/avatartion(5).png",
+    "/avatars/avatartion(7).png",
+    "/avatars/avatartion(8).png",
+    "/avatars/avatartion(9).png",
+    "/avatars/avatartion(11).png",
+    "/avatars/avatartion(12).png",
+    "/avatars/avatartion(13).png",
+  ];
+
+  const [avatar, setAvatar] = useState(avatars[0]);
 
   const SAVE_INTERVAL_MS = 1000;
 
@@ -126,6 +141,20 @@ function TextEditor() {
     setQuill(q);
   }, []);
 
+  const randomizeAvatar = () => {
+    const randomIndex = Math.floor(Math.random() * avatars.length);
+    setAvatar(avatars[randomIndex]);
+  };
+
+  const saveToClipboard = async () => {
+    setCopyState(true);
+    await navigator.clipboard.writeText(docID);
+
+    setTimeout(() => {
+      setCopyState(false);
+    }, 1500);
+  };
+
   return (
     <section>
       <div className="top-bar">
@@ -139,13 +168,17 @@ function TextEditor() {
           </div>
 
           <div className="wrapper">
-            <button className="share-btn">
-              <img className="icon" src="/icons/share.svg" alt="" />
-              <span>Share</span>
+            <button onClick={saveToClipboard} className="share-btn">
+              <img
+                className="icon"
+                src={copyState ? "/icons/check.svg" : "/icons/share.svg"}
+                alt=""
+              />
+              <span>{copyState ? "Copied" : "Copy ID"}</span>
             </button>
 
-            <div className="avatar">
-              <img src="/avatars/avatartion.png" alt="User Avatar" />
+            <div onClick={randomizeAvatar} className="avatar">
+              <img src={avatar} alt="User Avatar" />
             </div>
           </div>
         </div>
@@ -153,42 +186,46 @@ function TextEditor() {
 
       <div className="container" ref={wrapperRef}></div>
 
-      {sidebar ? (
-        <div className="sidebar">
-          <div className="sidebar-container">
-            <div className="sidebar-header">
-              <h1 className="title-name">Recent Documents </h1>
-
-              <span
-                className="sidebar-cross-btn"
-                onClick={() => setSidebar(!sidebar)}
-              >
-                <img
-                  src="/icons/cross.svg"
-                  className="icon sidebar-cross-icon"
-                  alt=""
-                />
-              </span>
-            </div>
-
-            <div className="sidebar-content">
-              <ul className="recent-docs">
-                {docs.map((doc) => (
-                  <li
-                    onClick={() => (window.location.href = `/${doc._id}`)}
-                    key={doc._id}
-                    className={docID == doc._id ? "current-doc" : null}
-                  >
-                    {doc._id} {docID == doc._id ? "(Current)" : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {sidebar ? Sidebar() : null}
     </section>
   );
+
+  function Sidebar() {
+    return (
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <div className="sidebar-header">
+            <h1 className="title-name">Recent Documents </h1>
+
+            <span
+              className="sidebar-cross-btn"
+              onClick={() => setSidebar(!sidebar)}
+            >
+              <img
+                src="/icons/cross.svg"
+                className="icon sidebar-cross-icon"
+                alt=""
+              />
+            </span>
+          </div>
+
+          <div className="sidebar-content">
+            <ul className="recent-docs">
+              {docs.map((doc) => (
+                <li
+                  onClick={() => (window.location.href = `/${doc._id}`)}
+                  key={doc._id}
+                  className={docID == doc._id ? "current-doc" : null}
+                >
+                  {doc._id} {docID == doc._id ? "(Current)" : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default TextEditor;
